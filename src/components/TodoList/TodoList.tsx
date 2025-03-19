@@ -38,7 +38,7 @@ export const TodoList: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (inputRef.current) {
+    if ((error === ErrorType.AddTodo || error === ErrorType.NoTitle || error === ErrorType.DeleteTodo) && inputRef.current) {
       inputRef.current.focus();
     }
   }, [error, newTodoTitle]);

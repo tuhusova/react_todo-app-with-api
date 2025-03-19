@@ -45,6 +45,7 @@ export const TodoItem: React.FC<Props> = ({
       await onUpdate({ ...todo, title: newTitle.trim() });
       setIsEditing(false);
     } catch {
+      setIsEditing(true);
       if (inputRef.current) {
         inputRef.current.focus();
       }

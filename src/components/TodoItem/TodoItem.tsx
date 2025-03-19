@@ -31,6 +31,7 @@ export const TodoItem: React.FC<Props> = ({
 
 
   const handleBlur = async () => {
+    console.log('handleBlur вызван');
     if (!newTitle.trim()) {
       onDelete(id);
       return;
@@ -46,6 +47,7 @@ export const TodoItem: React.FC<Props> = ({
       setIsEditing(false);
     } catch {
       setIsEditing(true);
+
       if (inputRef.current) {
         inputRef.current.focus();
       }

@@ -18,14 +18,18 @@ export const TodoList: React.FC = () => {
   const [loadingTodoIds, setLoadingTodoIds] = useState<number[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // useEffect(() => {
+  //   if (error && !isAdding) {
+  //     const timer = setTimeout(() => setError(null), 3000);
+  //     return () => clearTimeout(timer);
+  //   }
+  //   return undefined; // Явное возвращение undefined, если условие не выполняется
+  // }, [error, isAdding]);
   useEffect(() => {
-    if (error) {
-      const timer = setTimeout(() => setError(null), 3000);
-      return () => clearTimeout(timer);
+    if (!isAdding && inputRef.current) {
+      inputRef.current.focus();
     }
-
-    return undefined;
-  }, [error]);
+  }, [isAdding]);
 
   useEffect(() => {
     postService
@@ -37,11 +41,14 @@ export const TodoList: React.FC = () => {
       });
   }, []);
 
-  useEffect(() => {
-    if (error !== ErrorType.UpdateTodo && inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [error, newTodoTitle]);
+  // useEffect(() => {
+  //   if (error === ErrorType.UpdateTodo) {
+  //     return;
+  //   }
+  //   if ( error !== ErrorType.UpdateTodo && inputRef.current) {
+  //     inputRef.current.focus();
+  //   }
+  // }, [error]);
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
@@ -67,19 +74,30 @@ export const TodoList: React.FC = () => {
     postService
       .createTodo({ title: trimmedTitle, completed: false, userId: USER_ID })
       .then(newTodo => {
+        if (inputRef.current) {
+          inputRef.current.focus();
+        }
         setTodos(currentTodos => [...currentTodos, newTodo]);
         setTempTodo(null);
         setNewTodoTitle('');
-      })
-      .catch(() => {
-        setError(ErrorType.AddTodo);
-        setTempTodo(null);
         if (inputRef.current) {
           inputRef.current.focus();
         }
       })
+      .catch(() => {
+        setError(ErrorType.AddTodo);
+        setTimeout(() => setError(null), 3000);
+        setTempTodo(null);
+
+        if (inputRef.current) {
+          inputRef.current.focus();
+        }
+      })
+
       .finally(() => {
+
         setIsAdding(false);
+        setTimeout(() => inputRef.current?.focus(), 0);
       });
   };
 
@@ -164,7 +182,12 @@ export const TodoList: React.FC = () => {
       );
     } catch {
       setError(ErrorType.UpdateTodo);
-      setTimeout(() => setError(null), 3000);
+
+      setTimeout(() => {
+        console.log('Сбрасываем ошибку');
+        setError(null);
+      }, 3000);
+
       throw new Error();
     } finally {
       setLoadingTodoIds(prev => prev.filter(id => id !== updatedTodo.id));

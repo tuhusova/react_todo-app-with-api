@@ -38,7 +38,7 @@ export const TodoList: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if ((error === ErrorType.AddTodo || error === ErrorType.NoTitle || error === ErrorType.DeleteTodo) && inputRef.current) {
+    if (error !== ErrorType.UpdateTodo && inputRef.current) {
       inputRef.current.focus();
     }
   }, [error, newTodoTitle]);
@@ -165,7 +165,6 @@ export const TodoList: React.FC = () => {
     } catch {
       setError(ErrorType.UpdateTodo);
       setTimeout(() => setError(null), 3000);
-      throw new Error();
     } finally {
       setLoadingTodoIds(prev => prev.filter(id => id !== updatedTodo.id));
     }

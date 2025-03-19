@@ -7,7 +7,6 @@ import { FilterType } from '../../types/FilterType';
 import cs from 'classnames';
 import { USER_ID } from '../../api/todos';
 
-
 export const TodoList: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [error, setError] = useState<ErrorType | null>(null);
@@ -18,13 +17,6 @@ export const TodoList: React.FC = () => {
   const [loadingTodoIds, setLoadingTodoIds] = useState<number[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // useEffect(() => {
-  //   if (error && !isAdding) {
-  //     const timer = setTimeout(() => setError(null), 3000);
-  //     return () => clearTimeout(timer);
-  //   }
-  //   return undefined; // Явное возвращение undefined, если условие не выполняется
-  // }, [error, isAdding]);
   useEffect(() => {
     if (!isAdding && inputRef.current) {
       inputRef.current.focus();
@@ -40,15 +32,6 @@ export const TodoList: React.FC = () => {
         setTimeout(() => setError(null), 3000);
       });
   }, []);
-
-  // useEffect(() => {
-  //   if (error === ErrorType.UpdateTodo) {
-  //     return;
-  //   }
-  //   if ( error !== ErrorType.UpdateTodo && inputRef.current) {
-  //     inputRef.current.focus();
-  //   }
-  // }, [error]);
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
@@ -95,7 +78,6 @@ export const TodoList: React.FC = () => {
       })
 
       .finally(() => {
-
         setIsAdding(false);
         setTimeout(() => inputRef.current?.focus(), 0);
       });
@@ -137,7 +119,6 @@ export const TodoList: React.FC = () => {
         setError(ErrorType.DeleteTodo);
         setTimeout(() => setError(null), 3000);
       }
-
     } finally {
       setLoadingTodoIds(prev => prev.filter(id => !completedIds.includes(id)));
       if (inputRef.current) {
@@ -178,13 +159,12 @@ export const TodoList: React.FC = () => {
       const todo = await postService.updateTodo(updatedTodo);
 
       setTodos(currentTodos =>
-        currentTodos.map(t => (t.id === updatedTodo.id ? todo : t))
+        currentTodos.map(t => (t.id === updatedTodo.id ? todo : t)),
       );
     } catch {
       setError(ErrorType.UpdateTodo);
 
       setTimeout(() => {
-        console.log('Сбрасываем ошибку');
         setError(null);
       }, 3000);
 
@@ -227,7 +207,9 @@ export const TodoList: React.FC = () => {
     const allCompleted = todos.every(todo => todo.completed);
     const newCompletedStatus = !allCompleted;
 
-    const todosToUpdate = todos.filter(todo => todo.completed !== newCompletedStatus);
+    const todosToUpdate = todos.filter(
+      todo => todo.completed !== newCompletedStatus,
+    );
     const todoIds = todosToUpdate.map(todo => todo.id);
 
     setLoadingTodoIds(todoIds);
@@ -278,15 +260,18 @@ export const TodoList: React.FC = () => {
   const filters = [
     { type: FilterType.All, label: 'All', cy: 'FilterLinkAll' },
     { type: FilterType.Active, label: 'Active', cy: 'FilterLinkActive' },
-    { type: FilterType.Completed, label: 'Completed', cy: 'FilterLinkCompleted' },
+    {
+      type: FilterType.Completed,
+      label: 'Completed',
+      cy: 'FilterLinkCompleted',
+    },
   ];
 
   return (
     <div className="todoapp">
       <div className="todoapp__content">
         <header className="todoapp__header">
-        {!!todos.length && (
-
+          {!!todos.length && (
             <button
               type="button"
               className={cs('todoapp__toggle-all', {
@@ -296,7 +281,6 @@ export const TodoList: React.FC = () => {
               onClick={handleToggleAll}
             />
           )}
-
 
           <form onSubmit={handleSubmit}>
             <input
@@ -320,7 +304,7 @@ export const TodoList: React.FC = () => {
               todo={todo}
               onDelete={deleteTodo}
               onToggle={handleToggle}
-              isLoading={loadingTodoIds.includes(todo.id) }
+              isLoading={loadingTodoIds.includes(todo.id)}
               onUpdate={updateTodo}
             />
           ))}

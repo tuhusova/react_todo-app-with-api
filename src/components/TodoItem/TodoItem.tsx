@@ -6,7 +6,7 @@ interface Props {
   todo: Todo;
   onDelete: (id: number) => void;
   onToggle: (id: number) => void;
-  onUpdate: (todo:Todo) => void;
+  onUpdate: (todo: Todo) => void;
   isLoading: boolean;
 }
 
@@ -22,16 +22,13 @@ export const TodoItem: React.FC<Props> = ({
   const [newTitle, setNewTitle] = useState(title);
   const inputRef = useRef<HTMLInputElement>(null);
 
-
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
-  }, [isEditing])
-
+  }, [isEditing]);
 
   const handleBlur = async () => {
-    console.log('handleBlur вызван');
     if (!newTitle.trim()) {
       onDelete(id);
       return;
@@ -80,35 +77,38 @@ export const TodoItem: React.FC<Props> = ({
       </label>
 
       {isEditing ? (
-
         <input
-          type='text'
-          data-cy='TodoTitleField'
-          className='todo__title-field'
+          type="text"
+          data-cy="TodoTitleField"
+          className="todo__title-field"
           onChange={e => setNewTitle(e.target.value)}
           ref={inputRef}
           value={newTitle}
-          placeholder='Empty todo will be deleted'
+          placeholder="Empty todo will be deleted"
           onKeyDown={handleKeyDown}
           autoFocus
           onBlur={handleBlur}
-          />
-      ) : (<span
-        data-cy="TodoTitle"
-        className="todo__title"
-        onDoubleClick={() => setIsEditing(true)}>
-        {title}
-      </span>)}
+        />
+      ) : (
+        <span
+          data-cy="TodoTitle"
+          className="todo__title"
+          onDoubleClick={() => setIsEditing(true)}
+        >
+          {title}
+        </span>
+      )}
 
       {/* Remove button appears only on hover */}
-      {!isEditing && (<button
-        type="button"
-        className="todo__remove"
-        data-cy="TodoDelete"
-        onClick={() => onDelete(id)}
-      >
-        ×
-      </button>
+      {!isEditing && (
+        <button
+          type="button"
+          className="todo__remove"
+          data-cy="TodoDelete"
+          onClick={() => onDelete(id)}
+        >
+          ×
+        </button>
       )}
 
       {/* overlay will cover the todo while it is being deleted or updated */}

@@ -15,12 +15,7 @@ export function createTodo({
   return client.post<Todo>(`/todos`, { title, completed, userId });
 }
 
-export function updateTodo({
-  id,
-  title,
-  completed,
-  userId = USER_ID,
-}: Todo) {
+export function updateTodo({ id, title, completed, userId = USER_ID }: Todo) {
   return client.patch<Todo>(`/todos/${id}`, { title, completed, userId });
 }
 

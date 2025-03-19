@@ -165,6 +165,7 @@ export const TodoList: React.FC = () => {
     } catch {
       setError(ErrorType.UpdateTodo);
       setTimeout(() => setError(null), 3000);
+      throw new Error();
     } finally {
       setLoadingTodoIds(prev => prev.filter(id => id !== updatedTodo.id));
     }

@@ -23,12 +23,12 @@ export const TodoItem: React.FC<Props> = ({
   const inputRef = useRef<HTMLInputElement>(null);
 
 
-
   useEffect(() => {
-    if (isEditing && inputRef.current) {
+    if (inputRef.current) {
       inputRef.current.focus();
     }
   }, [isEditing])
+
 
   const handleBlur = async () => {
     if (!newTitle.trim()) {
@@ -45,7 +45,6 @@ export const TodoItem: React.FC<Props> = ({
       await onUpdate({ ...todo, title: newTitle.trim() });
       setIsEditing(false);
     } catch {
-      setIsEditing(true)
       if (inputRef.current) {
         inputRef.current.focus();
       }
@@ -58,7 +57,7 @@ export const TodoItem: React.FC<Props> = ({
     } else if (event.key === 'Escape') {
       setIsEditing(false);
       setNewTitle(title);
-      // return;
+      return;
     }
   };
 
